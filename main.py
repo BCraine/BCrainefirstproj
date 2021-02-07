@@ -1,10 +1,12 @@
+#Brandon Craine
+
 
 import requests
 import secrets
 
 
 def get_data(url: str):
-    all_data = [] #this will hold the return value
+    all_data = []
 
     for page in range(0,160):
         full_url = f"{url}&api_key={secrets.api_key}&page={page}"
