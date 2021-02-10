@@ -38,24 +38,24 @@ def close_db(connection: sqlite3.Connection):
     connection.close()
 
 
-#def setup_db(cursor: sqlite3.Cursor):
-    #cursor.execute('''CREATE TABLE IF NOT EXISTS college(
-    #college_name TEXT NOT NULL,
-    #college_city TEXT NOT NULL,
-    #college_state TEXT NOT NULL,
-    #2018_student_size INTEGER DEFAULT 0,
-    #2017_student_size INTEGER DEFAULT 0,
-    #2017_earnings_3yrs_after_completion_overall_count_over_poverty_line INTEGER DEFAULT 0,
-    #2016_repayment_3_yr_repayment_overall INTEGER DEFAULT 0,
-    #PRIMARY KEY(college_name,college_city,college_state)
-    #);''')
+def setup_db(cursor: sqlite3.Cursor):
+    cursor.execute('''CREATE TABLE IF NOT EXISTS college(
+    college_name TEXT NOT NULL,
+    college_city TEXT NOT NULL,
+    college_state TEXT NOT NULL,
+    student_size_2018 INTEGER DEFAULT 0,
+    student_size_2017 INTEGER DEFAULT 0,
+    earnings_3yrs_after_completion_overall_count_over_poverty_line_2017 INTEGER DEFAULT 0,
+    repayment_3_yr_repayment_overall_2016 INTEGER DEFAULT 0,
+    PRIMARY KEY(college_name,college_city,college_state)
+    );''')
 
 
 
 def main():
     conn, cursor = open_db("bcrainedb.sqlite")
     print(type(conn))
-    #setup_db(cursor)
+    setup_db(cursor)
     close_db(conn)
 
     url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
