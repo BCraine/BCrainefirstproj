@@ -40,14 +40,14 @@ def close_db(connection: sqlite3.Connection):
 
 def setup_db(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS college(
+    college_url TEXT PRIMARY KEY,
     college_name TEXT NOT NULL,
     college_city TEXT NOT NULL,
     college_state TEXT NOT NULL,
     student_size_2018 INTEGER DEFAULT 0,
     student_size_2017 INTEGER DEFAULT 0,
     earnings_3yrs_after_completion_overall_count_over_poverty_line_2017 INTEGER DEFAULT 0,
-    repayment_3_yr_repayment_overall_2016 INTEGER DEFAULT 0,
-    PRIMARY KEY(college_name,college_city,college_state)
+    repayment_3_yr_repayment_overall_2016 INTEGER DEFAULT 0
     );''')
 
 
@@ -59,14 +59,14 @@ def main():
     close_db(conn)
 
     url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
-          "3&fields=id,school.state,school.city,school.name,2018.student.size," \
+          "3&fields=id,school.school_url,school.state,school.city,school.name,2018.student.size," \
           "2016.repayment.3_yr_repayment.overall,2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size,"
     all_data = get_data(url)
 
-    outfile = open('schooldata.txt', 'w')
-    datastring = ','.join([str(i) for i in all_data])
-    outfile.write(datastring)
-    outfile.close()
+    #outfile = open('schooldata.txt', 'w')
+    #datastring = ','.join([str(i) for i in all_data])
+    #outfile.write(datastring)
+    #outfile.close()
 
     for item in all_data:
         print(item)
