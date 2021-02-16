@@ -15,6 +15,26 @@ def test_get_data():
 
 
 def test_database():
-    pass
+   conn, cursor = main.open_db("db_test.sqlite")
+   print(type(conn))
+   main.setup_db(cursor)
+   all_data = []
 
-#not done yet
+   for item in all_data:
+       main.make_database_data(cursor, "test_school",
+                               "test_city",
+                               "test_state",
+                               "test_2018_size",
+                               "test_2017_size",
+                               "test_2017_poverty",
+                               "test_2016_repayment")
+       assert all_data[0] == "test_school"
+
+
+
+
+
+
+
+   main.close_db(conn)
+

@@ -91,7 +91,6 @@ def main():
 
     all_data = get_data(url)
 
-    # demo comment to test workflow
     outfile = open('schooldata.txt', 'w')
     datastring = ','.join([str(i) for i in all_data])
     outfile.write(datastring)
@@ -108,6 +107,9 @@ def main():
         print(item)
 
     close_db(conn)
+
+
+
 
 
 
