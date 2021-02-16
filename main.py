@@ -76,37 +76,47 @@ def make_database_data(cursor: sqlite3.Cursor,name,city,state,size_2018,size_201
 
 
 def main():
-    conn, cursor = open_db("bcrainedb.sqlite")
-    print(type(conn))
-    setup_db(cursor)
+
+    try:
+
+        conn, cursor = open_db("bcrainedb.sqlite")
+        print(type(conn))
+        setup_db(cursor)
 
 
 
-    url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
-          "3&fields=id,school.state,school.city,school.name,2018.student.size," \
-          "2016.repayment.3_yr_repayment.overall,2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
+        url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
+              "3&fields=id,school.state,school.city,school.name,2018.student.size," \
+              "2016.repayment.3_yr_repayment.overall,2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
 
 
 
 
-    all_data = get_data(url)
+        all_data = get_data(url)
 
-    outfile = open('schooldata.txt', 'w')
-    datastring = ','.join([str(i) for i in all_data])
-    outfile.write(datastring)
-    outfile.close()
+        outfile = open('schooldata.txt', 'w')
+        datastring = ','.join([str(i) for i in all_data])
+        outfile.write(datastring)
+        outfile.close()
 
-    for item in all_data:
-        make_database_data(cursor, item['school.name'], item['school.city'], item['school.state'],
-                           item['2018.student.size'],
-                           item['2017.student.size'],
-                           item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-                           item['2016.repayment.3_yr_repayment.overall'])
+        for item in all_data:
+            make_database_data(cursor, item['school.name'], item['school.city'], item['school.state'],
+                               item['2018.student.size'],
+                               item['2017.student.size'],
+                               item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+                               item['2016.repayment.3_yr_repayment.overall'])
 
 
-        print(item)
+            print(item)
 
-    close_db(conn)
+        close_db(conn)
+
+
+
+
+    except:
+        print("delete database before running again!")
+
 
 
 
