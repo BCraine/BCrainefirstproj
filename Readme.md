@@ -1,6 +1,9 @@
 Brandon Craine
 Dr Santore
 Comp 490
-7 February 2021
+16 February 2021
 
-For the first sprint my project doesn't need anything new to run aside from the basics. I added more URL fields to get the remaining data. I also added a for loop to get all pages at once. My project currently includes all fields and gets all 3000+ entires when it is ran.
+
+I was able to get everything working for sprint 2. The project creates a database and one table named "college". It then takes all 3000+ entries gathered from the api and places them into the table. My primary key is a combination of 3 fields. (name, city, and state) 
+
+
