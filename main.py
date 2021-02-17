@@ -67,7 +67,7 @@ def make_database_data(cursor: sqlite3.Cursor,name,city,state,size_2018,size_201
     if size_2018 == None:
         size_2018 = 0
 
-    cursor.execute(f'''INSERT INTO college (college_name,college_city,college_state,
+    cursor.execute('''INSERT INTO college (college_name,college_city,college_state,
     student_size_2018,student_size_2017,earnings_3yrs_after_completion_overall_count_over_poverty_line_2017,
     repayment_3_yr_repayment_overall_2016)
     VALUES(?,?,?,?,?,?,?)''',( name,city,state,size_2018,size_2017,earnings_2017,repayment_2016))
