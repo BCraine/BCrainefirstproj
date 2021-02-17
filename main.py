@@ -55,16 +55,16 @@ def setup_db(cursor: sqlite3.Cursor):
 
 def make_database_data(cursor: sqlite3.Cursor,name,city,state,size_2018,size_2017,earnings_2017,repayment_2016):
 
-    if earnings_2017 == None:
+    if earnings_2017 is None:
         earnings_2017 = 0
 
-    if repayment_2016 == None:
+    if repayment_2016 is None:
         repayment_2016 = 0
 
-    if size_2017 == None:
+    if size_2017 is None:
         size_2017 = 0
 
-    if size_2018 == None:
+    if size_2018 is None:
         size_2018 = 0
 
     cursor.execute('''INSERT INTO college (college_name,college_city,college_state,
@@ -87,7 +87,8 @@ def main():
 
         url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
               "3&fields=id,school.state,school.city,school.name,2018.student.size," \
-              "2016.repayment.3_yr_repayment.overall,2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
+              "2016.repayment.3_yr_repayment.overall," \
+              "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
 
 
 
