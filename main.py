@@ -1,4 +1,4 @@
-#Brandon Craine
+# Brandon Craine
 
 
 import requests
@@ -10,9 +10,8 @@ from typing import Tuple
 def get_data(url: str):
     all_data = []
 
-    for page in range(0,161):
+    for page in range(0, 161):
         full_url = f"{url}&api_key={secrets.api_key}&page={page}"
-
 
         response = requests.get(full_url)
 
@@ -21,16 +20,18 @@ def get_data(url: str):
             return []
         json_data = response.json()
 
-
         results = json_data['results']
 
         all_data.extend(results)
 
     return all_data
 
+
 def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
-    db_connection = sqlite3.connect(filename)#connect to existing DB or create new one
-    cursor = db_connection.cursor()#get ready to read/write data
+    db_connection = sqlite3.connect(filename)  # connect to existing DB or create new one
+
+    cursor = db_connection.cursor()  # get ready to read/write data
+
     return db_connection, cursor
 
 
@@ -52,9 +53,7 @@ def setup_db(cursor: sqlite3.Cursor):
     );''')
 
 
-
-def make_database_data(cursor: sqlite3.Cursor,name,city,state,size_2018,size_2017,earnings_2017,repayment_2016):
-
+def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, size_2017, earnings_2017, repayment_2016):
     if earnings_2017 is None:
         earnings_2017 = 0
 
@@ -70,28 +69,20 @@ def make_database_data(cursor: sqlite3.Cursor,name,city,state,size_2018,size_201
     cursor.execute('''INSERT INTO college (college_name,college_city,college_state,
     student_size_2018,student_size_2017,earnings_3yrs_after_completion_overall_count_over_poverty_line_2017,
     repayment_3_yr_repayment_overall_2016)
-    VALUES(?,?,?,?,?,?,?)''',( name,city,state,size_2018,size_2017,earnings_2017,repayment_2016))
-
-
+    VALUES(?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016))
 
 
 def main():
-
     try:
 
         conn, cursor = open_db("bcrainedb.sqlite")
         print(type(conn))
         setup_db(cursor)
 
-
-
         url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
               "3&fields=id,school.state,school.city,school.name,2018.student.size," \
               "2016.repayment.3_yr_repayment.overall," \
               "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
-
-
-
 
         all_data = get_data(url)
 
@@ -107,22 +98,13 @@ def main():
                                item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
                                item['2016.repayment.3_yr_repayment.overall'])
 
-
             print(item)
 
         close_db(conn)
 
+    except Exception:
 
-
-
-    except:
         print("delete database before running again!")
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
