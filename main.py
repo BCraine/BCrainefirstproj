@@ -2,8 +2,11 @@
 
 
 import requests
+from openpyxl import load_workbook
+
 import secrets
 import sqlite3
+import openpyxl
 from typing import Tuple
 
 
@@ -51,6 +54,12 @@ def setup_db(cursor: sqlite3.Cursor):
     repayment_3_yr_repayment_overall_2016 INTEGER DEFAULT 0,
     PRIMARY KEY(college_name, college_city, college_state)
     );''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS wage_data(
+    data_state TEXT NOT NULL,
+    major_title TEXT NOT NULL,
+    total_employment_field_in_state INTEGER DEFAULT 0,
+    percentile_25_salary REAL DEFAULT 0,
+    total_employment_state_for_field INTEGER DEFAULT 0);''')
 
 
 def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, size_2017, earnings_2017, repayment_2016):
@@ -72,7 +81,19 @@ def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, siz
     VALUES(?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016))
 
 
+def load_excel():
+    workbook = load_workbook(filename="state_M2019_dl.xlsx")
+    sheet = workbook.active
+    #print(workbook.sheetnames)
+    #print(sheet["A:AD"])
+
+    for value in sheet.iter_rows(values_only=True):
+        print(value)
+
+
 def main():
+    #load_excel()
+
     try:
 
         conn, cursor = open_db("bcrainedb.sqlite")
