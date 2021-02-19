@@ -58,7 +58,7 @@ def setup_db(cursor: sqlite3.Cursor):
     major_title TEXT NOT NULL,
     total_employment_field_in_state INTEGER DEFAULT 0,
     percentile_25_salary REAL DEFAULT 0,
-    total_employment_state_for_field INTEGER DEFAULT 0);''')
+    occupation_code REAL DEFAULT 0);''')
 
 
 def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, size_2017, earnings_2017, repayment_2016):
@@ -80,18 +80,14 @@ def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, siz
     VALUES(?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016))
 
 
-def load_excel():
-    workbook = load_workbook(filename="state_M2019_dl.xlsx")
-    sheet = workbook.active
-    # print(workbook.sheetnames)
-    # print(sheet["A:AD"])
-
-    for value in sheet.iter_rows(values_only=True):
-        print(value)
+def make_wage_database_data(cursor: sqlite3.Cursor, d_state, m_title, t_employment_f_state, p_25_salary,
+                            o_code):
+    cursor.execute('''INSERT INTO wage_data(data_state,major_title,total_employment_field_in_state,percentile_25_salary,
+                            occupation_code) values (?,?,?,?,?)''', (d_state, m_title, t_employment_f_state,
+                                                                     p_25_salary, o_code))
 
 
 def main():
-    # load_excel()
 
     try:
 
@@ -119,6 +115,14 @@ def main():
                                item['2016.repayment.3_yr_repayment.overall'])
 
             print(item)
+
+        workbook = load_workbook(filename="state_M2019_dl.xlsx")
+        sheet = workbook.active
+
+        for value in sheet.iter_rows(values_only=True):
+            make_wage_database_data(cursor, value[1], value[8], value[10], value[19], value[7])
+
+            # cursor.execute(f'SELECT * from wage_data WHERE value[9] == "Major"')
 
         close_db(conn)
 
