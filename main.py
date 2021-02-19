@@ -6,7 +6,6 @@ from openpyxl import load_workbook
 
 import secrets
 import sqlite3
-import openpyxl
 from typing import Tuple
 
 
@@ -84,15 +83,15 @@ def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, siz
 def load_excel():
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
-    #print(workbook.sheetnames)
-    #print(sheet["A:AD"])
+    # print(workbook.sheetnames)
+    # print(sheet["A:AD"])
 
     for value in sheet.iter_rows(values_only=True):
         print(value)
 
 
 def main():
-    #load_excel()
+    # load_excel()
 
     try:
 
