@@ -116,7 +116,7 @@ def main():
 
             print(item)
 
-        workbook = load_workbook(filename="state_M2019_dl_1.xlsx")
+        workbook = load_workbook(filename="state_M2019_dl.xlsx")
         sheet = workbook.active
 
         for value in sheet.iter_rows(values_only=True):
