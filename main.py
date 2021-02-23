@@ -55,6 +55,7 @@ def setup_db(cursor: sqlite3.Cursor):
     );''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS wage_data(
     data_state TEXT NOT NULL,
+    occ_group TEXT NOT NULL,
     major_title TEXT NOT NULL,
     total_employment_field_in_state INTEGER DEFAULT 0,
     percentile_25_salary REAL DEFAULT 0,
@@ -80,15 +81,17 @@ def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, siz
     VALUES(?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016))
 
 
-def make_wage_database_data(cursor: sqlite3.Cursor, d_state, m_title, t_employment_f_state, p_25_salary,
+def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t_employment_f_state, p_25_salary,
                             o_code):
-    cursor.execute('''INSERT INTO wage_data(data_state,major_title,total_employment_field_in_state,percentile_25_salary,
-                            occupation_code) values (?,?,?,?,?)''', (d_state, m_title, t_employment_f_state,
-                                                                     p_25_salary, o_code))
+    if o_group == "major":
+        cursor.execute('''INSERT INTO wage_data(data_state, occ_group, major_title,total_employment_field_in_state,
+        percentile_25_salary,
+                                occupation_code) values (?,?,?,?,?,?)''', (d_state, o_group, m_title,
+                                                                           t_employment_f_state,
+                                                                           p_25_salary, o_code))
 
 
 def main():
-
     try:
 
         conn, cursor = open_db("bcrainedb.sqlite")
@@ -120,11 +123,10 @@ def main():
         sheet = workbook.active
 
         for value in sheet.iter_rows(values_only=True):
-            make_wage_database_data(cursor, value[1], value[8], value[10], value[19], value[7])
-
-            # cursor.execute(f'SELECT * from wage_data WHERE value[9] == "Major"')
+            make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
         close_db(conn)
+
 
     except Exception:
 
