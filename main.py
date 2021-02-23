@@ -127,7 +127,6 @@ def main():
 
         close_db(conn)
 
-
     except Exception:
 
         print("delete database before running again!")
