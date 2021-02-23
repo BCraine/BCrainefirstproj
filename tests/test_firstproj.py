@@ -51,7 +51,7 @@ def test_write_to_table_two():
     sheet = workbook.active
 
     for value in sheet.iter_rows(values_only=True):
-        main.make_wage_database_data(cursor, value[1], value[8], value[10], value[19], value[7])
+        main.make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
     row_count = cursor.rowcount
 
