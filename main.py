@@ -51,6 +51,7 @@ def setup_db(cursor: sqlite3.Cursor):
     student_size_2017 INTEGER DEFAULT 0,
     earnings_3yrs_after_completion_overall_count_over_poverty_line_2017 INTEGER DEFAULT 0,
     repayment_3_yr_repayment_overall_2016 INTEGER DEFAULT 0,
+    repayment_repayment_cohort_3_year_declining_balance_2016 REAL DEFAULT 0,
     PRIMARY KEY(college_name, college_city, college_state)
     );''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS wage_data(
@@ -62,7 +63,8 @@ def setup_db(cursor: sqlite3.Cursor):
     occupation_code REAL DEFAULT 0);''')
 
 
-def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, size_2017, earnings_2017, repayment_2016):
+def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, size_2017, earnings_2017, repayment_2016,
+                       repayment_cohort_2016):
     if earnings_2017 is None:
         earnings_2017 = 0
 
@@ -75,10 +77,14 @@ def make_database_data(cursor: sqlite3.Cursor, name, city, state, size_2018, siz
     if size_2018 is None:
         size_2018 = 0
 
+    if repayment_cohort_2016 is None:
+        repayment_cohort_2016 = 0
+
     cursor.execute('''INSERT INTO college (college_name,college_city,college_state,
     student_size_2018,student_size_2017,earnings_3yrs_after_completion_overall_count_over_poverty_line_2017,
-    repayment_3_yr_repayment_overall_2016)
-    VALUES(?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016))
+    repayment_3_yr_repayment_overall_2016, repayment_repayment_cohort_3_year_declining_balance_2016)
+    VALUES(?,?,?,?,?,?,?,?)''', (name, city, state, size_2018, size_2017, earnings_2017, repayment_2016,
+                                 repayment_cohort_2016))
 
 
 def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t_employment_f_state, p_25_salary,
@@ -101,7 +107,8 @@ def main():
         url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
               "3&fields=id,school.state,school.city,school.name,2018.student.size," \
               "2016.repayment.3_yr_repayment.overall," \
-              "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size"
+              "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size," \
+              "2016.repayment.repayment_cohort.3_year_declining_balance"
 
         all_data = get_data(url)
 
@@ -115,7 +122,8 @@ def main():
                                item['2018.student.size'],
                                item['2017.student.size'],
                                item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-                               item['2016.repayment.3_yr_repayment.overall'])
+                               item['2016.repayment.3_yr_repayment.overall'],
+                               item['2016.repayment.repayment_cohort.3_year_declining_balance'])
 
             print(item)
 

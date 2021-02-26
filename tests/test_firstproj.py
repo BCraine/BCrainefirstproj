@@ -9,7 +9,8 @@ def test_get_data():
                                "school.degrees_awarded.predominant=2,"
                                "3&fields=id,school.state,school.city,school.name,2018.student.size,"
                                "2016.repayment.3_yr_repayment.overall,"
-                               "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size")
+                               "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size,"
+                               "2016.repayment.repayment_cohort.3_year_declining_balance")
     count = 0
     for element in result:
         count += 1
@@ -26,14 +27,16 @@ def test_write_to_table_one():
     all_data = [{'2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line': 187,
                  'school.name': 'Kauai Community College', '2017.student.size': 1007, '2018.student.size':
                      929, 'school.state': 'HI', 'id': 141802, 'school.city': 'Lihue',
-                 '2016.repayment.3_yr_repayment.overall': 273}]
+                 '2016.repayment.3_yr_repayment.overall': 273,
+                 '2016.repayment.repayment_cohort.3_year_declining_balance': 0.5018315018}]
 
     for item in all_data:
         main.make_database_data(cursor, item['school.name'], item['school.city'], item['school.state'],
                                 item['2018.student.size'],
                                 item['2017.student.size'],
                                 item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-                                item['2016.repayment.3_yr_repayment.overall'])
+                                item['2016.repayment.3_yr_repayment.overall'],
+                                item['2016.repayment.repayment_cohort.3_year_declining_balance'])
 
     row_count = cursor.rowcount
 
@@ -71,7 +74,8 @@ def test_table_one():
                                 "test_2018_size",
                                 "test_2017_size",
                                 "test_2017_poverty",
-                                "test_2016_repayment")
+                                "test_2016_repayment",
+                                "test_2016_repayment_cohort")
         assert all_data[0] == "test_school"
 
     main.close_db(conn)
