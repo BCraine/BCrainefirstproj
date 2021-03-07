@@ -2,7 +2,7 @@
 # import openpyxl
 import requests
 from openpyxl import load_workbook
-import PySide6.QtWidgets
+import PySide6
 import sys
 # import numbers
 
