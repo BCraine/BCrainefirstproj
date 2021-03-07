@@ -28,3 +28,4 @@ class BCraineGuiWindow(QWidget):
                            f"\t\t{item['total_employment']}\t\t{item['percentile_25_salary']}" \
                            f"\t\t{item['occupation_code']}"
             list_item = QListWidgetItem(display_text, listview=self.list_control)
+            list_item

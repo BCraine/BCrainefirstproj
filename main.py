@@ -1,7 +1,7 @@
 # Brandon Craine
 # import openpyxl
 import requests
-from openpyxl import load_workbook, worksheet
+from openpyxl import load_workbook
 import PySide6.QtWidgets
 import sys
 # import numbers
