@@ -1,12 +1,21 @@
 # Brandon Craine
-
-
+import openpyxl
 import requests
-from openpyxl import load_workbook
+from openpyxl import load_workbook, worksheet
+import PySide6.QtWidgets
+import sys
+# import numbers
 
+import GuiWindow
 import secrets
 import sqlite3
 from typing import Tuple
+
+
+def display_data(data: list):
+    qt_app = PySide6.QtWidgets.QApplication(sys.argv)
+    my_window = GuiWindow.BCraineGuiWindow(data)
+    sys.exit(qt_app.exec_())
 
 
 def get_data(url: str):
@@ -97,47 +106,78 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
                                                                            p_25_salary, o_code))
 
 
+# def get_excel_data() -> List[Dict]:
+# workbook_file = openpyxl.load_workbook("state_M2019_dl.xlsx")
+# sheet = workbook_file.active
+# final_data_list = []
+# for value in sheet.iter_rows(values_only=True):
+#  record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
+#  "percentile_25_salary": value[19], "occupation_code": value[7]}
+
+# final_data_list.append(record)
+# return final_data_list
+
+
 def main():
-    try:
+    # try:
 
-        conn, cursor = open_db("bcrainedb.sqlite")
-        print(type(conn))
-        setup_db(cursor)
+    conn, cursor = open_db("bcrainedb.sqlite")
+    print(type(conn))
+    setup_db(cursor)
 
-        url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
-              "3&fields=id,school.state,school.city,school.name,2018.student.size," \
-              "2016.repayment.3_yr_repayment.overall," \
-              "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size," \
-              "2016.repayment.repayment_cohort.3_year_declining_balance"
+    url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
+          "3&fields=id,school.state,school.city,school.name,2018.student.size," \
+          "2016.repayment.3_yr_repayment.overall," \
+          "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size," \
+          "2016.repayment.repayment_cohort.3_year_declining_balance"
 
-        all_data = get_data(url)
+    all_data = get_data(url)
 
-        outfile = open('schooldata.txt', 'w')
-        datastring = ','.join([str(i) for i in all_data])
-        outfile.write(datastring)
-        outfile.close()
+    outfile = open('schooldata.txt', 'w')
+    datastring = ','.join([str(i) for i in all_data])
+    outfile.write(datastring)
+    outfile.close()
 
-        for item in all_data:
-            make_database_data(cursor, item['school.name'], item['school.city'], item['school.state'],
-                               item['2018.student.size'],
-                               item['2017.student.size'],
-                               item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-                               item['2016.repayment.3_yr_repayment.overall'],
-                               item['2016.repayment.repayment_cohort.3_year_declining_balance'])
+    for item in all_data:
+        make_database_data(cursor, item['school.name'], item['school.city'], item['school.state'],
+                           item['2018.student.size'],
+                           item['2017.student.size'],
+                           item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+                           item['2016.repayment.3_yr_repayment.overall'],
+                           item['2016.repayment.repayment_cohort.3_year_declining_balance'])
 
-            print(item)
+        print(item)
 
-        workbook = load_workbook(filename="state_M2019_dl.xlsx")
-        sheet = workbook.active
+    workbook = load_workbook(filename="state_M2019_dl.xlsx")
+    sheet = workbook.active
 
-        for value in sheet.iter_rows(values_only=True):
-            make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
+    # final_data_list = []
+    # for current_row in worksheet.rows:
+    # state_cell = current_row[0]
+    # state_name = state_cell.value
+    # median_income2018 = current_row[1].value
+    # if not isinstance(median_income2018, numbers.Number):
+    #    continue
+    # record = {"state_name": state_name, "median_income": median_income2018}
+    # final_data_list.append(record)
 
-        close_db(conn)
+    final_data_list = []
+    for value in sheet.iter_rows(values_only=True):
+        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
-    except Exception:
+        if value[9] == "major":
+            record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
+                      "percentile_25_salary": value[19], "occupation_code": value[7]}
+            final_data_list.append(record)
+    close_db(conn)
 
-        print("delete database before running again!")
+    display_data(final_data_list)
+
+    # display_data(get_excel_data())
+
+# except Exception:
+
+# print("delete database before running again!")
 
 
 if __name__ == '__main__':
