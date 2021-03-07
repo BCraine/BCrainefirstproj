@@ -15,6 +15,7 @@ from typing import Tuple
 def display_data(data: list):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)
     my_window = GuiWindow.BCraineGuiWindow(data)
+    my_window
     sys.exit(qt_app.exec_())
 
 
