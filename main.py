@@ -12,9 +12,9 @@ import sqlite3
 from typing import Tuple
 
 
-def display_data(data: list):
+def display_data(data: list, data1: list):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)
-    my_window = GuiWindow.BCraineGuiWindow(data)
+    my_window = GuiWindow.BCraineGuiWindow(data, data1)
     my_window
     sys.exit(qt_app.exec_())
 
@@ -122,9 +122,12 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 def main():
     # try:
 
+
     conn, cursor = open_db("bcrainedb.sqlite")
     print(type(conn))
     setup_db(cursor)
+    final_data_list_table_one = []
+    final_data_list_table_two = []
 
     url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
           "3&fields=id,school.state,school.city,school.name,2018.student.size," \
@@ -147,7 +150,15 @@ def main():
                            item['2016.repayment.3_yr_repayment.overall'],
                            item['2016.repayment.repayment_cohort.3_year_declining_balance'])
 
-        print(item)
+        record1 = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
+                   "size_2018": item['2018.student.size'],
+                   "size_2017": item['2017.student.size'],
+                   "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+                   "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
+                   "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance']}
+        final_data_list_table_one.append(record1)
+
+        #print(item)
 
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
@@ -162,17 +173,34 @@ def main():
     # record = {"state_name": state_name, "median_income": median_income2018}
     # final_data_list.append(record)
 
-    final_data_list = []
     for value in sheet.iter_rows(values_only=True):
         make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
         if value[9] == "major":
             record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
                       "percentile_25_salary": value[19], "occupation_code": value[7]}
-            final_data_list.append(record)
+            final_data_list_table_two.append(record)
+
+    #for item in all_data:
+        #for value in sheet.iter_rows(values_only=True):
+
+            #if value[9] == "major":
+                #record = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
+                    #   "size_2018": item['2018.student.size'],
+                     #  "size_2017": item['2017.student.size'],
+                      # "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+                      # "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
+                      # "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance'],
+                      # "state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
+                      # "percentile_25_salary": value[19], "occupation_code": value[7]}
+                #final_data_list.append(record)
+                #print(final_data_list)
+                #display_data(final_data_list)
+
     close_db(conn)
 
-    display_data(final_data_list)
+    print(final_data_list_table_two)
+    display_data(final_data_list_table_one, final_data_list_table_two)
 
     # display_data(get_excel_data())
 
