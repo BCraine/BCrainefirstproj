@@ -199,7 +199,6 @@ def main():
 
     close_db(conn)
 
-    print(final_data_list_table_two)
     display_data(final_data_list_table_one, final_data_list_table_two)
 
     # display_data(get_excel_data())
