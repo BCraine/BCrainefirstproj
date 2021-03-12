@@ -122,7 +122,6 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 def main():
     # try:
 
-
     conn, cursor = open_db("bcrainedb.sqlite")
     print(type(conn))
     setup_db(cursor)
@@ -158,7 +157,7 @@ def main():
                    "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance']}
         final_data_list_table_one.append(record1)
 
-        #print(item)
+        # print(item)
 
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
@@ -181,27 +180,28 @@ def main():
                       "percentile_25_salary": value[19], "occupation_code": value[7]}
             final_data_list_table_two.append(record)
 
-    #for item in all_data:
-        #for value in sheet.iter_rows(values_only=True):
+    # for item in all_data:
+    # for value in sheet.iter_rows(values_only=True):
 
-            #if value[9] == "major":
-                #record = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
-                    #   "size_2018": item['2018.student.size'],
-                     #  "size_2017": item['2017.student.size'],
-                      # "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-                      # "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
-                      # "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance'],
-                      # "state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
-                      # "percentile_25_salary": value[19], "occupation_code": value[7]}
-                #final_data_list.append(record)
-                #print(final_data_list)
-                #display_data(final_data_list)
+    # if value[9] == "major":
+    # record = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
+    #   "size_2018": item['2018.student.size'],
+    #  "size_2017": item['2017.student.size'],
+    # "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+    # "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
+    # "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance'],
+    # "state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
+    # "percentile_25_salary": value[19], "occupation_code": value[7]}
+    # final_data_list.append(record)
+    # print(final_data_list)
+    # display_data(final_data_list)
 
     close_db(conn)
 
     display_data(final_data_list_table_one, final_data_list_table_two)
 
     # display_data(get_excel_data())
+
 
 # except Exception:
 
