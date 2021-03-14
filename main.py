@@ -12,7 +12,6 @@ import sqlite3
 from typing import Tuple, List, Dict
 
 
-
 def display_data(data: list, data1: list):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)
     my_window = GuiWindow.BCraineGuiWindow(data, data1)
@@ -120,7 +119,7 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 # return final_data_list
 
 
-def get_excel_data(cursor: sqlite3.Cursor) -> List[Dict]:
+def get_excel_data() -> List[Dict]:
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
     final_data_list_table_two = []
@@ -137,8 +136,8 @@ def get_key(value: dict):
     return value["occupation_code"]
 
 
-def excel_ascend_function(cursor: sqlite3.Cursor):
-    act_2 = get_excel_data(cursor)
+def excel_ascend_function():
+    act_2 = get_excel_data()
     act_2.sort(key=get_key)
 
     return act_2
@@ -151,7 +150,6 @@ def main():
     print(type(conn))
     setup_db(cursor)
     final_data_list_table_one = []
-    final_data_list_table_two = []
 
     url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
           "3&fields=id,school.state,school.city,school.name,2018.student.size," \
@@ -190,9 +188,7 @@ def main():
         # print(item)
     close_db(conn)
 
-    display_data(final_data_list_table_one, excel_ascend_function(cursor))
-
-
+    display_data(final_data_list_table_one, excel_ascend_function())
 
 
 # except Exception:
