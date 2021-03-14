@@ -118,6 +118,30 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 # final_data_list.append(record)
 # return final_data_list
 
+def get_excel_data(cursor: sqlite3.Cursor, d_list):
+    workbook = load_workbook(filename="state_M2019_dl.xlsx")
+    sheet = workbook.active
+
+    for value in sheet.iter_rows(values_only=True):
+        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
+
+        if value[9] == "major":
+            record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
+                      "percentile_25_salary": value[19], "occupation_code": value[7]}
+            d_list.append(record)
+    return d_list
+
+
+def get_key(value: dict):
+    return value["occupation_code"]
+
+
+def excel_ascend_function(cursor: sqlite3.Cursor, first_list, ascend_list):
+    act_2 = get_excel_data(cursor, ascend_list)
+    act_2.sort(key=get_key)
+
+    display_data(first_list, act_2)
+
 
 def main():
     # try:
@@ -159,48 +183,9 @@ def main():
 
         # print(item)
 
-    workbook = load_workbook(filename="state_M2019_dl.xlsx")
-    sheet = workbook.active
-
-    # final_data_list = []
-    # for current_row in worksheet.rows:
-    # state_cell = current_row[0]
-    # state_name = state_cell.value
-    # median_income2018 = current_row[1].value
-    # if not isinstance(median_income2018, numbers.Number):
-    #    continue
-    # record = {"state_name": state_name, "median_income": median_income2018}
-    # final_data_list.append(record)
-
-    for value in sheet.iter_rows(values_only=True):
-        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
-
-        if value[9] == "major":
-            record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
-                      "percentile_25_salary": value[19], "occupation_code": value[7]}
-            final_data_list_table_two.append(record)
-
-    # for item in all_data:
-    # for value in sheet.iter_rows(values_only=True):
-
-    # if value[9] == "major":
-    # record = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
-    #   "size_2018": item['2018.student.size'],
-    #  "size_2017": item['2017.student.size'],
-    # "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
-    # "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
-    # "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance'],
-    # "state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
-    # "percentile_25_salary": value[19], "occupation_code": value[7]}
-    # final_data_list.append(record)
-    # print(final_data_list)
-    # display_data(final_data_list)
-
     close_db(conn)
 
     display_data(final_data_list_table_one, final_data_list_table_two)
-
-    # display_data(get_excel_data())
 
 
 # except Exception:

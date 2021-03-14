@@ -1,6 +1,8 @@
 from PySide6 import QtWidgets
 from typing import List, Dict
 
+import main
+
 
 class BCraineGuiWindow(QtWidgets.QWidget):
     def __init__(self, data_to_show, more_data_to_show):
@@ -9,7 +11,7 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         self.data1 = more_data_to_show
         self.list_control = None
         self.list_control1 = None
-        self.setup_window()
+        self.setup_window_2()
 
     def setup_window(self):
         self.setWindowTitle("Sprint 4 Gui College Data")
@@ -27,7 +29,7 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         change_table_button.resize(change_table_button.sizeHint())
         change_table_button.move(30, 350)
         map_button = QtWidgets.QPushButton("Show Map", self)
-        #map_button.clicked.connect(self.setup_window_2)
+        # map_button.clicked.connect(self.setup_window_2)
         map_button.resize(map_button.sizeHint())
         map_button.move(30, 425)
         color_buttonA = QtWidgets.QPushButton("Show Color Coded Data (Ascending)", self)
@@ -61,7 +63,7 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         map_button.resize(map_button.sizeHint())
         map_button.move(30, 425)
         color_buttonA = QtWidgets.QPushButton("Show Color Coded Data (Ascending)", self)
-        # map_button.clicked.connect(self.setup_window_2)
+        # color_buttonA.clicked.connect(main.excel_ascend_fu)
         color_buttonA.resize(color_buttonA.sizeHint())
         color_buttonA.move(400, 425)
         color_buttonB = QtWidgets.QPushButton("Show Color Coded Data (Descending)", self)
