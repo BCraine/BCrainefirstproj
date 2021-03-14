@@ -9,7 +9,8 @@ import sys
 import GuiWindow
 import secrets
 import sqlite3
-from typing import Tuple
+from typing import Tuple, List, Dict
+
 
 
 def display_data(data: list, data1: list):
@@ -118,29 +119,29 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 # final_data_list.append(record)
 # return final_data_list
 
-def get_excel_data(cursor: sqlite3.Cursor, d_list):
+
+def get_excel_data(cursor: sqlite3.Cursor) -> List[Dict]:
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
-
+    final_data_list_table_two = []
     for value in sheet.iter_rows(values_only=True):
-        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
         if value[9] == "major":
             record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
                       "percentile_25_salary": value[19], "occupation_code": value[7]}
-            d_list.append(record)
-    return d_list
+            final_data_list_table_two.append(record)
+    return final_data_list_table_two
 
 
 def get_key(value: dict):
     return value["occupation_code"]
 
 
-def excel_ascend_function(cursor: sqlite3.Cursor, first_list, ascend_list):
-    act_2 = get_excel_data(cursor, ascend_list)
+def excel_ascend_function(cursor: sqlite3.Cursor):
+    act_2 = get_excel_data(cursor)
     act_2.sort(key=get_key)
 
-    display_data(first_list, act_2)
+    return act_2
 
 
 def main():
@@ -181,11 +182,17 @@ def main():
                    "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance']}
         final_data_list_table_one.append(record1)
 
-        # print(item)
+    workbook = load_workbook(filename="state_M2019_dl.xlsx")
+    sheet = workbook.active
+    for value in sheet.iter_rows(values_only=True):
+        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
+        # print(item)
     close_db(conn)
 
-    display_data(final_data_list_table_one, final_data_list_table_two)
+    display_data(final_data_list_table_one, excel_ascend_function(cursor))
+
+
 
 
 # except Exception:
