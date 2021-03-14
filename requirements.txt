@@ -1,3 +1,4 @@
 requests
 openpyxl
 PySide6
+libgl0
