@@ -190,7 +190,6 @@ def main():
 
     display_data(final_data_list_table_one, excel_ascend_function())
 
-
 # except Exception:
 
 # print("delete database before running again!")
