@@ -27,6 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         sudo apt-get install libopengl0 -y
+        sudo apt-get install libegl1 -y
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
