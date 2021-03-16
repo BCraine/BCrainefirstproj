@@ -6,13 +6,11 @@ import PySide6
 import sys
 import pandas
 import plotly
-# import numbers
 
 import GuiWindow
 import secrets
 import sqlite3
 from typing import Tuple, List, Dict
-
 
 statedict = {}
 
@@ -194,8 +192,8 @@ def main():
               "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
               "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
               "West Virginia", "Wisconsin", "Wyoming", "Guam", "Puerto Rico", "Virgin Islands"]
-    #for value1 in sheet.iter_rows(values_only=True):
-       # if value1[9] == "major":
+    # for value1 in sheet.iter_rows(values_only=True):
+    # if value1[9] == "major":
 
     for column in sheet.columns:
         excel_text = column[1].value
@@ -207,23 +205,23 @@ def main():
     state_names_pandas = pandas.Series(states)
     state_count_pandas = pandas.Series(statedict)
     data = [dict(
-                type='choropleth',
-                colorscale="BlueRed",
-                autocolorscale=False,
-                locations=state_names_pandas,
-                z=state_count_pandas,
-                locationmode='USA-states',
-                colorbar=dict(
-                    title="Wage Data info per state")
+        type='choropleth',
+        colorscale="BlueRed",
+        autocolorscale=False,
+        locations=state_names_pandas,
+        z=state_count_pandas,
+        locationmode='USA-states',
+        colorbar=dict(
+            title="Wage Data info per state")
 
-            )]
+    )]
     layout = dict(
-                title='How Many Times Each State Has Wage Data Info',
-                geo=dict(
-                    scope='usa',
-                    projection=dict(type='albers usa'),
-                    showlakes=True, )
-            )
+        title='How Many Times Each State Has Wage Data Info',
+        geo=dict(
+            scope='usa',
+            projection=dict(type='albers usa'),
+            showlakes=True, )
+    )
     fig = dict(data=data, layout=layout)
     plotly.offline.plot(fig, filename='bcrainesprint4map.html')
 
@@ -235,6 +233,7 @@ def main():
     close_db(conn)
 
     display_data(final_data_list_table_one, excel_ascend_function())
+
 
 # except Exception:
 
