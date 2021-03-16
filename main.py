@@ -4,12 +4,17 @@ import requests
 from openpyxl import load_workbook
 import PySide6
 import sys
+import pandas
+import plotly
 # import numbers
 
 import GuiWindow
 import secrets
 import sqlite3
 from typing import Tuple, List, Dict
+
+
+statedict = {}
 
 
 def display_data(data: list, data1: list):
@@ -182,8 +187,49 @@ def main():
 
     workbook = load_workbook(filename="state_M2019_dl.xlsx")
     sheet = workbook.active
+    states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+              "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
+              "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi",
+              "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
+              "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+              "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+              "West Virginia", "Wisconsin", "Wyoming", "Guam", "Puerto Rico", "Virgin Islands"]
+    #for value1 in sheet.iter_rows(values_only=True):
+       # if value1[9] == "major":
+
+    for column in sheet.columns:
+        excel_text = column[1].value
+        if excel_text in states:
+            if excel_text in statedict:
+                statedict[excel_text] = statedict[excel_text]
+            else:
+                statedict[excel_text] = 1
+    state_names_pandas = pandas.Series(states)
+    state_count_pandas = pandas.Series(statedict)
+    data = [dict(
+                type='choropleth',
+                colorscale="BlueRed",
+                autocolorscale=False,
+                locations=state_names_pandas,
+                z=state_count_pandas,
+                locationmode='USA-states',
+                colorbar=dict(
+                    title="Wage Data info per state")
+
+            )]
+    layout = dict(
+                title='How Many Times Each State Has Wage Data Info',
+                geo=dict(
+                    scope='usa',
+                    projection=dict(type='albers usa'),
+                    showlakes=True, )
+            )
+    fig = dict(data=data, layout=layout)
+    plotly.offline.plot(fig, filename='bcrainesprint4map.html')
+
     for value in sheet.iter_rows(values_only=True):
-        make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
+        if value[9] == "major":
+            make_wage_database_data(cursor, value[1], value[9], value[8], value[10], value[19], value[7])
 
         # print(item)
     close_db(conn)
