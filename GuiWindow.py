@@ -1,8 +1,6 @@
 from PySide6 import QtWidgets
 from typing import List, Dict
 
-import main
-
 
 class BCraineGuiWindow(QtWidgets.QWidget):
     def __init__(self, data_to_show, more_data_to_show):
