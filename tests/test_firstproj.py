@@ -60,6 +60,8 @@ def test_write_to_table_two():
 
     assert row_count == 1
 
+    main.close_db(conn)
+
 
 def test_table_one():
     conn, cursor = main.open_db("db_test_table1.sqlite")
@@ -94,3 +96,15 @@ def test_table_two():
         assert value[1] == "test1"
 
     main.close_db(conn)
+
+
+def test_data_reload():
+    new_data_api = main.get_api_data()
+    new_data_excel = main.get_excel_data()
+
+    assert new_data_api[0] == {'name': 'Kauai Community College', 'city': 'Lihue', 'cstate': 'HI', 'size_2018': 929,
+                               'size_2017': 1007, 'poverty_2017': 187, 'repayment_2016': 273,
+                               'repayment_cohort_2016': 0.5018315018}
+
+    assert new_data_excel[0] == {'state': 'Alabama', 'occ_group': 'major', 'major_title': 'Management Occupations',
+                                 'total_employment': 83760, 'percentile_25_salary': 31.8, 'occupation_code': '11-0000'}

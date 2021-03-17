@@ -1,6 +1,7 @@
 # Brandon Craine
 # import openpyxl
 import requests
+from PySide6 import QtWidgets
 from openpyxl import load_workbook
 import PySide6
 import sys
@@ -120,6 +121,24 @@ def make_wage_database_data(cursor: sqlite3.Cursor, d_state, o_group, m_title, t
 
 # final_data_list.append(record)
 # return final_data_list
+def get_api_data() -> List[Dict]:
+    final_data_list_table_one = []
+    url = "https://api.data.gov/ed/collegescorecard/v1/schools.json?school.degrees_awarded.predominant=2," \
+          "3&fields=id,school.state,school.city,school.name,2018.student.size," \
+          "2016.repayment.3_yr_repayment.overall," \
+          "2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line,2017.student.size," \
+          "2016.repayment.repayment_cohort.3_year_declining_balance"
+
+    all_data = get_data(url)
+    for item in all_data:
+        record1 = {"name": item['school.name'], "city": item['school.city'], "cstate": item['school.state'],
+                   "size_2018": item['2018.student.size'],
+                   "size_2017": item['2017.student.size'],
+                   "poverty_2017": item['2017.earnings.3_yrs_after_completion.overall_count_over_poverty_line'],
+                   "repayment_2016": item['2016.repayment.3_yr_repayment.overall'],
+                   "repayment_cohort_2016": item['2016.repayment.repayment_cohort.3_year_declining_balance']}
+        final_data_list_table_one.append(record1)
+    return final_data_list_table_one
 
 
 def get_excel_data() -> List[Dict]:
@@ -131,6 +150,7 @@ def get_excel_data() -> List[Dict]:
         if value[9] == "major":
             record = {"state": value[1], "occ_group": value[9], "major_title": value[8], "total_employment": value[10],
                       "percentile_25_salary": value[19], "occupation_code": value[7]}
+
             final_data_list_table_two.append(record)
     return final_data_list_table_two
 
@@ -144,6 +164,10 @@ def excel_ascend_function():
     act_2.sort(key=get_key)
 
     return act_2
+
+
+def reload_data():
+    display_data(get_api_data(), excel_ascend_function())
 
 
 def main():
@@ -232,7 +256,7 @@ def main():
         # print(item)
     close_db(conn)
 
-    display_data(final_data_list_table_one, excel_ascend_function())
+    display_data(get_api_data(), excel_ascend_function())
 
 
 # except Exception:

@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets
 from typing import List, Dict
 
-# import main
+import main
 
 
 class BCraineGuiWindow(QtWidgets.QWidget):
@@ -32,14 +32,17 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         # map_button.clicked.connect(self.setup_window_2)
         map_button.resize(map_button.sizeHint())
         map_button.move(30, 425)
-        color_buttonA = QtWidgets.QPushButton("Show Color Coded Data (Ascending)", self)
+        color_buttona = QtWidgets.QPushButton("Show Color Coded Data (Ascending)", self)
         # map_button.clicked.connect(self.setup_window_2)
-        color_buttonA.resize(color_buttonA.sizeHint())
-        color_buttonA.move(400, 425)
-        color_buttonB = QtWidgets.QPushButton("Show Color Coded Data (Descending)", self)
+        color_buttona.resize(color_buttona.sizeHint())
+        color_buttona.move(400, 425)
+        color_buttonb = QtWidgets.QPushButton("Show Color Coded Data (Descending)", self)
         # map_button.clicked.connect(self.setup_window_2)
-        color_buttonB.resize(color_buttonB.sizeHint())
-        color_buttonB.move(30, 500)
+        color_buttonb.resize(color_buttonb.sizeHint())
+        color_buttonb.move(30, 500)
+        reload_data_button = QtWidgets.QPushButton("Reload Data", self)
+        reload_data_button.resize(reload_data_button.sizeHint())
+        reload_data_button.move(400, 500)
 
         self.show()
 
@@ -55,6 +58,7 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         quit_button.resize(quit_button.sizeHint())
         quit_button.move(400, 350)
         change_table_button = QtWidgets.QPushButton("Change Table/Update data", self)
+        change_table_button.clicked.connect(display_list1.clear)
         change_table_button.clicked.connect(self.setup_window)
         change_table_button.resize(change_table_button.sizeHint())
         change_table_button.move(30, 350)
@@ -63,13 +67,17 @@ class BCraineGuiWindow(QtWidgets.QWidget):
         map_button.resize(map_button.sizeHint())
         map_button.move(30, 425)
         color_buttonA = QtWidgets.QPushButton("Show Color Coded Data (Ascending)", self)
-        # color_buttonA.clicked.connect(main.excel_ascend_fu)
+
         color_buttonA.resize(color_buttonA.sizeHint())
         color_buttonA.move(400, 425)
-        color_buttonB = QtWidgets.QPushButton("Show Color Coded Data (Descending)", self)
-        # map_button.clicked.connect(self.setup_window_2)
-        color_buttonB.resize(color_buttonB.sizeHint())
-        color_buttonB.move(30, 500)
+        color_buttonb = QtWidgets.QPushButton("Show Color Coded Data (Descending)", self)
+
+        color_buttonb.resize(color_buttonb.sizeHint())
+        color_buttonb.move(30, 500)
+        reload_data_button = QtWidgets.QPushButton("Reload Data", self)
+        reload_data_button.clicked.connect(display_list1.clear)
+        reload_data_button.resize(reload_data_button.sizeHint())
+        reload_data_button.move(400, 500)
         self.show()
 
     def put_data_in_list_one(self, data: List[Dict]):
